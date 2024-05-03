@@ -9,17 +9,26 @@ public class SignsTrigger : MonoBehaviour
     public float meanPosition_y = 25;
 
     public float standardDeviation = 1;
-    public float regionAvaliableWidth = 40;
     public GameObject stopSign;
     public GameObject turnRightSign;
 
+    private float regionWidth = 40, regionHeigh = 40;
+    private float regionCenterWidth, regionCenterHeight;
     // Start is called before the first frame update
     void Start()
     {
-        InvokeRepeating("GenerateSigns", 0f, 5f);
+        Session currentSession = Session.GetInstance();
+        LoadProbabilitiArray(currentSession.currentUser.configuration.signDistribution);
+        
+        regionHeigh = Screen.height / 3;
+        regionWidth = Screen.width / 3;
+        regionCenterWidth = regionWidth / 2;
+        regionCenterHeight = regionHeigh / 2;
+
+        newSignRatio = currentSession.currentUser.configuration.probabilityExibitionSign;
+        InvokeRepeating("GenerateSigns", 0f, currentSession.currentUser.configuration.timeExibitionSign);
     }
 
-    // Update is called once per frame
     void Update()
     {
 
@@ -29,12 +38,8 @@ public class SignsTrigger : MonoBehaviour
     public void GenerateSigns()
     {
         float randomValue = Random.value;
-        if (randomValue < newSignRatio)
-        {   
-            Debug.Log("Generating new sign");
-            float x = (float)NormalizedRandom(meanPosition_x);
-            float y = (float)NormalizedRandom(meanPosition_y);
-            Vector3 position = new Vector3(x, y, -5);
+        if (randomValue < newSignRatio) {
+            Vector3 position = GetPostionNewSign();
 
             GameObject sign = Random.value > 0.5 ? stopSign : turnRightSign;
             GameObject newSign = Instantiate(sign, position, Quaternion.identity);
@@ -43,39 +48,42 @@ public class SignsTrigger : MonoBehaviour
         }
     }
 
-    public double NormalizedRandom(float mean)
-    {
-        Debug.Log("Mean: " + mean);
-        double randomValue = NextGaussianDouble(0, (2*mean));
-        Debug.Log("Random Value: " + randomValue);
-        return randomValue;
+    private Vector3 GetPostionNewSign(){
+        int index = SelectPosition();
+        int row = index / 3; // Grid 3x3
+        int column = index % 3;
+
+        // Get center point of the region
+        float x = (column - 1) * regionCenterWidth;
+        float y = (row - 1) * regionCenterHeight;
+
+        // Get random point inside the region
+        float randomX = Random.Range(x - regionWidth / 2, x + regionWidth / 2);
+        float randomY = Random.Range(y - regionHeigh / 2, y + regionHeigh / 2);
+
+        return new Vector3(randomX, randomY, -5);
     }
-    public double NextGaussianDouble(float minValue, float maxValue)
-    {
-        Debug.Log("Min: " + minValue);
-        Debug.Log("Max: " + maxValue);
-        float u, v, S;
-
-        do
-        {
-            u = 2.0f * UnityEngine.Random.value - 1.0f;
-            v = 2.0f * UnityEngine.Random.value - 1.0f;
-            S = u * u + v * v;
+    int [] probabilities;
+    int totalPositions;
+    private void LoadProbabilitiArray(int[] positionProbabilities) {
+        int total = 0;
+        foreach (int prob in positionProbabilities) {
+            total += prob;
         }
-        while (S >= 1.0f);
 
-        // Standard Normal Distribution
-        float std = u * Mathf.Sqrt(-2.0f * Mathf.Log(S) / S);
+        probabilities = new int[total];
+        int index = 0;
+        foreach (int prob in positionProbabilities) {
+            for (int i = 0; i < prob; i++) {
+                probabilities[index] = i;
+                index++;
+            }
+        }
 
-        Debug.Log("Std: " + std);
-        // Normal Distribution centered between the min and max value
-        // and clamped following the "three-sigma rule"
-        float mean = (minValue + maxValue) / 2.0f;
-        float sigma = (maxValue - mean) / 3.0f;
-        Debug.Log("Mean: " + mean);
-        Debug.Log("Sigma: " + sigma);
-        Debug.Log("Before: " + std * sigma + mean);
-
-        return Mathf.Clamp(std * sigma + mean, minValue, maxValue);
+        totalPositions = total;
+    }
+    public int SelectPosition() {
+        int randomValue = UnityEngine.Random.Range(0, totalPositions);
+        return probabilities[randomValue];
     }
 }

@@ -13,13 +13,21 @@ public class Moviment : MonoBehaviour
     public float boxWidthPercentage = 0.5f; // Percentage of screen width for the box width
     public float boxHeightPercentage = 0.5f; // Percentage of screen height for the box height
 
+    // Timer
+    private float currentTime = 0f;
+
     private float currentLane = 0, nextLane = 0;
     // Start is called before the first frame update
     void Start()
     {
         Cursor.visible = true;
-
         Cursor.lockState = CursorLockMode.Locked;
+
+        Session currentSession = Session.GetInstance();
+
+        float gameTimeInSeconds = currentSession.currentUser.configuration.matchDuration * 60f;
+        Debug.Log(currentSession.currentUser.configuration.matchDuration);
+        StartCoroutine(StartTimer(gameTimeInSeconds));
     }
 
     // Update is called once per frame
@@ -36,10 +44,7 @@ public class Moviment : MonoBehaviour
             }
         }
 
-        // if(currentLane > LEFT_LIMIT && currentLane < RIGHT_LIMIT && Math.Abs(currentLane - nextLane) > 0.05) {
-        
-        // }
-
+    //TODO: TOUCH INPUT
     //     if (Input.touchCount > 0) {
     //         Touch touch = Input.GetTouch(0);
     //         if (touch.phase == TouchPhase.Began) {
@@ -50,18 +55,42 @@ public class Moviment : MonoBehaviour
     //             }
     //         }
     //     }
-
-    //     if(currentLane > LEFT_LIMIT && currentLane < RIGHT_LIMIT && Math.Abs(currentLane - nextLane) > 0.05) {
-    //         if (currentLane < nextLane) {
-    //             MovePlayer(turnSpeed);
-    //         } else {
-    //             MovePlayer(-1 * turnSpeed);
-    //         }
-    //     }
     }
 
     void MovePlayer(float direction) {
         // Move the player horizontally based on the direction (left or right)
         transform.Translate(Vector3.right * direction * moveSpeed * Time.deltaTime);
+    }
+
+    IEnumerator StartTimer(float gameTimeInSeconds)
+    {
+        currentTime = gameTimeInSeconds;
+
+        while (currentTime > 0)
+        {
+            yield return new WaitForSeconds(1f); // Wait for 1 second
+
+            currentTime -= 1f; // Decrement timer
+
+            UpdateTimerDisplay();
+
+            // Check if time is up
+            if (currentTime <= 0)
+            {
+                EndGame();
+            }
+        }
+    }
+
+    void UpdateTimerDisplay() {
+        int minutes = Mathf.FloorToInt(currentTime / 60);
+        int seconds = Mathf.FloorToInt(currentTime % 60);
+
+        // timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+    }
+
+    void EndGame() {
+        Debug.Log("Game Over!");
+        // Add any game over logic here
     }
 }
