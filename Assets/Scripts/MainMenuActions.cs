@@ -70,6 +70,12 @@ public class MainMenuActions : MonoBehaviour
         // Go to settings scene
         UnityEngine.SceneManagement.SceneManager.LoadScene("UserSettings");
     }
+
+    public void Play(){
+        // Go to game scene
+        UnityEngine.SceneManagement.SceneManager.LoadScene("VRMode");
+    }
+
     public void SaveNewUser() {
         Debug.Log("Save new user");
         string newUserName = newUserInputField.GetComponent<TMP_InputField>().text;

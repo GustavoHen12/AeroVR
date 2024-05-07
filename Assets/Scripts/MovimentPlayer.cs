@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+using System.Collections;
+using Google.XR.Cardboard;
+using UnityEngine;
+using UnityEngine.XR;
+using UnityEngine.XR.Management;
+
 public class Moviment : MonoBehaviour
 {
     [SerializeField] float turnSpeed = 2;
@@ -28,6 +34,27 @@ public class Moviment : MonoBehaviour
         float gameTimeInSeconds = currentSession.currentUser.configuration.matchDuration * 60f;
         Debug.Log(currentSession.currentUser.configuration.matchDuration);
         StartCoroutine(StartTimer(gameTimeInSeconds));
+
+        StartCoroutine(StartXR());
+    }
+
+    private IEnumerator StartXR()
+    {
+        Debug.Log("Initializing XR...");
+        yield return XRGeneralSettings.Instance.Manager.InitializeLoader();
+
+        if (XRGeneralSettings.Instance.Manager.activeLoader == null)
+        {
+            Debug.LogError("Initializing XR Failed.");
+        }
+        else
+        {
+            Debug.Log("XR initialized.");
+
+            Debug.Log("Starting XR...");
+            XRGeneralSettings.Instance.Manager.StartSubsystems();
+            Debug.Log("XR started.");
+        }
     }
 
     // Update is called once per frame

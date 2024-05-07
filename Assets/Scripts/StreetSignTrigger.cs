@@ -13,18 +13,19 @@ public class SignsTrigger : MonoBehaviour
     public GameObject turnRightSign;
 
     private float regionWidth = 40, regionHeigh = 40;
-    private float regionCenterWidth, regionCenterHeight;
+    private float up = 20, left = -35, down = 0, right = 35;
+
     // Start is called before the first frame update
     void Start()
     {
         Session currentSession = Session.GetInstance();
         LoadProbabilitiArray(currentSession.currentUser.configuration.signDistribution);
         
-        regionHeigh = Screen.height / 3;
-        regionWidth = Screen.width / 3;
-        regionCenterWidth = regionWidth / 2;
-        regionCenterHeight = regionHeigh / 2;
-
+        float height = up - down;
+        float width = right - left;
+        regionHeigh = height / 3;
+        regionWidth = width / 3;
+        
         newSignRatio = currentSession.currentUser.configuration.probabilityExibitionSign;
         InvokeRepeating("GenerateSigns", 0f, currentSession.currentUser.configuration.timeExibitionSign);
     }
@@ -53,11 +54,12 @@ public class SignsTrigger : MonoBehaviour
         int row = index / 3; // Grid 3x3
         int column = index % 3;
 
-        // Get center point of the region
-        float x = (column - 1) * regionCenterWidth;
-        float y = (row - 1) * regionCenterHeight;
+        // // Get center point of the region
+        float x = (left + (column * regionWidth)) + regionWidth / 2;
+        float y = (up - (row * regionHeigh)) - regionHeigh / 2;
 
-        // Get random point inside the region
+
+        // // Get random point inside the region
         float randomX = Random.Range(x - regionWidth / 2, x + regionWidth / 2);
         float randomY = Random.Range(y - regionHeigh / 2, y + regionHeigh / 2);
 
@@ -72,12 +74,14 @@ public class SignsTrigger : MonoBehaviour
         }
 
         probabilities = new int[total];
-        int index = 0;
+        int index = 0, position = 0;
         foreach (int prob in positionProbabilities) {
             for (int i = 0; i < prob; i++) {
-                probabilities[index] = i;
+                probabilities[index] = position;
                 index++;
             }
+
+            position++;
         }
 
         totalPositions = total;

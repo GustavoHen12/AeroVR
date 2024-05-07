@@ -857,7 +857,6 @@ MonoBehaviour:
   meanPosition_x: 7
   meanPosition_y: 25
   standardDeviation: 5
-  regionAvaliableWidth: 100
   stopSign: {fileID: 8031240849543276018, guid: 20b91d20830169c79bbe2f5ed5608874,
     type: 3}
   turnRightSign: {fileID: 6364821154631905390, guid: 7f2ff465d202442148348c8f1ac876f9,
@@ -1542,17 +1541,17 @@ PrefabInstance:
     - target: {fileID: 5989703609565686484, guid: 7f2ff465d202442148348c8f1ac876f9,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -17
+      value: -35
       objectReference: {fileID: 0}
     - target: {fileID: 5989703609565686484, guid: 7f2ff465d202442148348c8f1ac876f9,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 5
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5989703609565686484, guid: 7f2ff465d202442148348c8f1ac876f9,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -5.4830704
+      value: -4.97262
       objectReference: {fileID: 0}
     - target: {fileID: 5989703609565686484, guid: 7f2ff465d202442148348c8f1ac876f9,
         type: 3}

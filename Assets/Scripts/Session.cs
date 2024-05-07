@@ -9,7 +9,6 @@ public class Session {
         if (instance == null) {
             JSONDataManager jsonDataManager = new JSONDataManager();
             jsonDataManager.Awake();
-            Debug.Log("Session instance is null");
             instance = jsonDataManager.LoadData<Session>("session");;
         }
         return instance;

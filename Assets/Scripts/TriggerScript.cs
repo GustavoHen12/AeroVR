@@ -22,29 +22,17 @@ public class TriggerScript : MonoBehaviour
     public GameObject grass_1;
 
     int scene_objects_size = 4;
-    GameObject[] scene_objects = null;
-
+    
     public LayerMask groundLayer;
 
     
     private float nextSection_z = 193f;
-    private float nextObstacle_y = 2;
     private int RIGHT = 1;
     private int LEFT = -1;
-    private static float[] lanes_center = new float[] {0, 5, -5};
 
 
     // Start is called before the first frame update
     void Start() {
-        // scene_objects = new GameObject[scene_objects_size];
-
-        // Debug.Log("Start");
-        // Debug.Log(Resources.Load("Bush_01"));
-        // scene_objects[0] = GameObject.Instantiate(Resources.Load("Bush_01")) as GameObject;
-        // scene_objects[1] = GameObject.Instantiate(Resources.Load("Bush_02")) as GameObject;
-        // scene_objects[2] = GameObject.Instantiate(Resources.Load("Bush_03")) as GameObject;
-        // scene_objects[3] = GameObject.Instantiate(Resources.Load("Flowers_01")) as GameObject;
-
         nextSection_z = 50f;
         InstantiateRoadSection(50f);
     }
@@ -95,12 +83,14 @@ public class TriggerScript : MonoBehaviour
 
         // Trees
         int numberOfTrees = 90;
+        int maxTreesOnRoad = 6, treesOnRoad = 0;
         for (int i = 0; i < numberOfTrees; i++) {
-            SpawnTree(roadSection);
+            bool inRoad = SpawnTree(roadSection, treesOnRoad < maxTreesOnRoad);
+            if(inRoad) treesOnRoad++;
         }
 
         // Other things
-        int numberOfThings = 40;
+        int numberOfThings = 50;
         for(int i = 0; i < numberOfThings; i++) {
             Vector3 point = getRandomPointGround(40f);
             if(point == new Vector3(0, 0, 0)) continue;
@@ -115,14 +105,16 @@ public class TriggerScript : MonoBehaviour
                 game_obj = grass_1;
             }
 
+            int scale = Random.Range(0, 2);
             GameObject obj = Instantiate(game_obj, point, Quaternion.identity);
+            obj.transform.localScale = new Vector3(1 + scale, 1 + scale, 1 + scale);
             obj.transform.parent = roadSection.transform;
         }
 
         Debug.Log("Section instantiated");
     }
 
-    void SpawnTree(GameObject roadSection){
+    bool SpawnTree(GameObject roadSection, bool inRoadEnabled){
         float spawnRadius = 90f; 
         // random tree
         GameObject treeObj = tree_1;
@@ -139,12 +131,24 @@ public class TriggerScript : MonoBehaviour
         // Raycast to find the surface of the ground
         RaycastHit hit;
         if (Physics.Raycast(randomPoint, Vector3.down, out hit, Mathf.Infinity, groundLayer)){
+            // Check if the tree is in the road
+            bool hitRoad = hit.point.x >= -7 && hit.point.x <= 7;
+            int roadOffset = 0;
+            if (!inRoadEnabled && hitRoad) {
+                roadOffset = Random.Range(0, 2) == 1 ? 10 : -10;
+            }
+
             // Instantiate the tree at the hit point
+            Vector3 treePosition = new Vector3(hit.point.x + roadOffset, hit.point.y, hit.point.z);
             int height = Random.Range(0, 3);
-            GameObject tree = Instantiate(treeObj, hit.point, Quaternion.identity);
+            GameObject tree = Instantiate(treeObj, treePosition, Quaternion.identity);
             tree.transform.localScale = new Vector3(1 + height, 1 + height, 1 + height);
             tree.transform.parent = roadSection.transform;
+
+            return hitRoad;
         }
+
+        return false;
     }
 
     private Vector3 getRandomPointGround(float spawnRadius){
@@ -158,23 +162,3 @@ public class TriggerScript : MonoBehaviour
     }
 
 }
-
-
-    // private int sectionSubdivisionLength = 6;
-    // private int sectionLength = 45;
-
-
-    // private void InstantiateObstacles(GameObject roadSection) {
-    //     int maxObstaclesPerSection = 3;
-    //     for (int i = 0; i < sectionLength; i+=sectionSubdivisionLength) {
-    //         bool sectionHasObstacle = Random.Range(0, 3) == 1;
-    //         if(!sectionHasObstacle) continue;
-
-    //         int numObstacles = Random.Range(1, maxObstaclesPerSection);
-    //         for(int j = 0; j < numObstacles; j++) {
-    //             int lane = Random.Range(0, 3);
-    //             GameObject obs = Instantiate(obstacle, new Vector3(lanes_center[lane], nextObstacle_y, i), Quaternion.identity);
-    //             obs.transform.parent = roadSection.transform;
-    //         }
-    //     }
-    // }
