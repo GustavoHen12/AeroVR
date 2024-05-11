@@ -4,8 +4,6 @@ using UnityEngine;
 public class TriggerScript : MonoBehaviour
 {
     public GameObject roadSection;
-    public GameObject obstacle;
-
     public GameObject montain_1;
     public GameObject montain_2;
     public GameObject ground_1;
@@ -15,7 +13,9 @@ public class TriggerScript : MonoBehaviour
     public GameObject tree_2;
     public GameObject tree_3;
     
-    public GameObject rock_3;
+    public GameObject rock;
+    public GameObject fence_1;
+    public GameObject fence_2;
     public GameObject bush_1;
     public GameObject bush_2;
     public GameObject flower_1;
@@ -25,6 +25,8 @@ public class TriggerScript : MonoBehaviour
     
     public LayerMask groundLayer;
 
+    public Transform particlesPool;
+    private GameObject[] hitEffects;
     
     private float nextSection_z = 193f;
     private int RIGHT = 1;
@@ -35,6 +37,11 @@ public class TriggerScript : MonoBehaviour
     void Start() {
         nextSection_z = 50f;
         InstantiateRoadSection(50f);
+
+        hitEffects = new GameObject[particlesPool.childCount];	
+        for(int i = 0; i < particlesPool.childCount; i++) {
+            hitEffects[i] = particlesPool.GetChild(i).gameObject;
+        }
     }
 
     // Update is called once per frame
@@ -48,7 +55,19 @@ public class TriggerScript : MonoBehaviour
             Debug.Log("Triggered");
             nextSection_z = 193f;
             InstantiateRoadSection(nextSection_z);
+        } else {
+            Debug.Log("Triggered obstacle");
+            SpawnHit();
         }
+    }
+
+    private GameObject SpawnHit()
+    {
+        GameObject spawnedHit = Instantiate(hitEffects[0]);
+        spawnedHit.transform.position = new Vector3(0, 2, -26);
+        spawnedHit.transform.localScale = new Vector3(4, 4, 4);
+        spawnedHit.transform.LookAt(Camera.main.transform);
+        return spawnedHit;
     }
 
     public void InstantiateRoadSection(float z) {
@@ -58,15 +77,35 @@ public class TriggerScript : MonoBehaviour
     }
 
     private void InstantiateAmbient(GameObject roadSection, int side) {
+        // Path
+        float z_minimum = nextSection_z - 40;
+        float z_maximum = nextSection_z + 90;
+        
+        int numberOfFences = 15;
+        for (int i = 0; i < numberOfFences; i++) {
+            GameObject fence = Random.Range(0, 2) == 1 ? fence_1 : fence_2;
+            GameObject fenceInstance = Instantiate(fence, new Vector3(side == RIGHT ? 8 : -8, -0.6f, Random.Range(z_minimum, z_maximum)), Quaternion.identity);
+            fenceInstance.transform.rotation = Quaternion.Euler(0, 90, 0);
+            fenceInstance.transform.parent = roadSection.transform;
+        }
+
+        int numberOfRocks = 50;
+        for (int i = 0; i < numberOfRocks; i++) {
+            GameObject rockInstance = Instantiate(rock, new Vector3(Random.Range(-7.0f, 7.0f), (Random.Range(8.0f, 15.0f)/-10.0f), Random.Range(z_minimum, z_maximum)), Quaternion.identity);
+            rockInstance.transform.parent = roadSection.transform;
+        }
+        
         // Ground
+        GameObject[] allGrounds = new GameObject[6];
+
         bool secondOrFirst = Random.Range(0, 2) == 1;
         GameObject ground = secondOrFirst ? ground_1 : ground_2;
 
         GameObject groundInstance = Instantiate(ground, new Vector3(side == RIGHT ? 26 : -26, -0.8f, nextSection_z), Quaternion.identity);
-        groundInstance.layer = 7;
         groundInstance.transform.localScale = new Vector3(1.5f, 1f, 2f);
         groundInstance.transform.parent = roadSection.transform;
-        
+        allGrounds[0] = groundInstance;
+
         // Set layer
         // Montains
         float[] montains_z = new float[] {-10, 20, 40, 60};
@@ -79,13 +118,29 @@ public class TriggerScript : MonoBehaviour
             GameObject montainInstance = Instantiate(montain, new Vector3(side == RIGHT ? 50 + x_offset : -50 - x_offset, -2, nextSection_z + montains_z[i] + z_offset), Quaternion.identity);
             montainInstance.transform.localScale = new Vector3(1, 1 + height, 2);
             montainInstance.transform.parent = roadSection.transform;
+
+            allGrounds[i + 1] = montainInstance;
         }
 
         // Trees
         int numberOfTrees = 90;
+        Vector3[] treePositions = new Vector3[numberOfTrees];
+        for (int i = 0; i < numberOfTrees; i++) {
+            treePositions[i] = getRandomPointGround(90f);
+        }
+
+        for(int i = 0; i < allGrounds.Length; i++) {
+            // turn off mesh collider
+            if(allGrounds[i] != null){
+                allGrounds[i].GetComponent<MeshCollider>().enabled = false;
+            }
+        }
+
         int maxTreesOnRoad = 6, treesOnRoad = 0;
         for (int i = 0; i < numberOfTrees; i++) {
-            bool inRoad = SpawnTree(roadSection, treesOnRoad < maxTreesOnRoad);
+            if(treePositions[i] == new Vector3(0, 0, 0)) continue;
+
+            bool inRoad = SpawnTree(roadSection, treePositions[i], treesOnRoad < maxTreesOnRoad);
             if(inRoad) treesOnRoad++;
         }
 
@@ -105,7 +160,7 @@ public class TriggerScript : MonoBehaviour
                 game_obj = grass_1;
             }
 
-            int scale = Random.Range(0, 2);
+            int scale = Random.Range(0, 3);
             GameObject obj = Instantiate(game_obj, point, Quaternion.identity);
             obj.transform.localScale = new Vector3(1 + scale, 1 + scale, 1 + scale);
             obj.transform.parent = roadSection.transform;
@@ -114,7 +169,7 @@ public class TriggerScript : MonoBehaviour
         Debug.Log("Section instantiated");
     }
 
-    bool SpawnTree(GameObject roadSection, bool inRoadEnabled){
+    bool SpawnTree(GameObject roadSection, Vector3 position, bool inRoadEnabled){
         float spawnRadius = 90f; 
         // random tree
         GameObject treeObj = tree_1;
@@ -125,36 +180,28 @@ public class TriggerScript : MonoBehaviour
             treeObj = tree_3;
         }
 
-        // Random point within the spawn radius
-        Vector3 randomPoint = (transform.position + Random.insideUnitSphere * spawnRadius) + new Vector3(0, 0, nextSection_z);
-
-        // Raycast to find the surface of the ground
-        RaycastHit hit;
-        if (Physics.Raycast(randomPoint, Vector3.down, out hit, Mathf.Infinity, groundLayer)){
-            // Check if the tree is in the road
-            bool hitRoad = hit.point.x >= -7 && hit.point.x <= 7;
-            int roadOffset = 0;
-            if (!inRoadEnabled && hitRoad) {
-                roadOffset = Random.Range(0, 2) == 1 ? 10 : -10;
-            }
-
-            // Instantiate the tree at the hit point
-            Vector3 treePosition = new Vector3(hit.point.x + roadOffset, hit.point.y, hit.point.z);
-            int height = Random.Range(0, 3);
-            GameObject tree = Instantiate(treeObj, treePosition, Quaternion.identity);
-            tree.transform.localScale = new Vector3(1 + height, 1 + height, 1 + height);
-            tree.transform.parent = roadSection.transform;
-
-            return hitRoad;
+        // Check if the tree is in the road
+        bool hitRoad = position.x >= -7 && position.x <= 7;
+        int roadOffset = 0;
+        if (!inRoadEnabled && hitRoad) {
+            roadOffset = Random.Range(0, 2) == 1 ? 10 : -10;
         }
 
-        return false;
+        // Instantiate the tree at the hit point
+        Vector3 treePosition = new Vector3(position.x + roadOffset, position.y, position.z);
+        int height = Random.Range(0, 3);
+        GameObject tree = Instantiate(treeObj, treePosition, Quaternion.identity);
+        tree.transform.localScale = new Vector3(1 + height, 1 + height, 1 + height);
+        // tree.GetComponent<Collider>().isTrigger = true;
+        tree.transform.parent = roadSection.transform;
+
+        return hitRoad;
     }
 
     private Vector3 getRandomPointGround(float spawnRadius){
         Vector3 randomPoint = (transform.position + Random.insideUnitSphere * spawnRadius) + new Vector3(0, 0, nextSection_z);
         RaycastHit hit;
-        if (Physics.Raycast(randomPoint, Vector3.down, out hit, Mathf.Infinity, groundLayer)){
+        if (Physics.Raycast(randomPoint, Vector3.down, out hit, Mathf.Infinity, groundLayer, QueryTriggerInteraction.Ignore)){
             return hit.point;
         }
 
