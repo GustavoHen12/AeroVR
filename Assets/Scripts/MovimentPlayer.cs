@@ -12,30 +12,28 @@ using UnityEngine.XR.Management;
 public class Moviment : MonoBehaviour
 {
     [SerializeField] float turnSpeed = 2;
+    public GameObject player;
+    public GameObject camera;
     public float moveSpeed = 1f;
     private float LEFT_LIMIT = -7;
     private float RIGHT_LIMIT = 7;
 
-    public float boxWidthPercentage = 0.5f; // Percentage of screen width for the box width
-    public float boxHeightPercentage = 0.5f; // Percentage of screen height for the box height
-
     // Timer
     private float currentTime = 0f;
 
-    private float currentLane = 0, nextLane = 0;
     // Start is called before the first frame update
     void Start()
     {
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.Locked;
-
         Session currentSession = Session.GetInstance();
 
         float gameTimeInSeconds = currentSession.currentUser.configuration.matchDuration * 60f;
         Debug.Log(currentSession.currentUser.configuration.matchDuration);
         StartCoroutine(StartTimer(gameTimeInSeconds));
 
-        StartCoroutine(StartXR());
+        if(currentSession.currentUser.configuration.vrMode){
+            Cursor.visible = false;
+            StartCoroutine(StartXR());            
+        }
     }
 
     private IEnumerator StartXR()
@@ -57,36 +55,43 @@ public class Moviment : MonoBehaviour
         }
     }
 
+    private static float lastMoviment = 0;
+    private static float turnIntensity = 0.0f;
     // Update is called once per frame
     void Update() {
-        currentLane = transform.position.x;
+        float currentLane = transform.position.x;
         float h = Input.GetAxis("Mouse X");
 
         if(h!=0){
+            turnIntensity = h;
+
             Debug.Log(h);
             if(h > 0 && currentLane < RIGHT_LIMIT){
-                MovePlayer(h > 0 ? (turnSpeed) : (-1 * turnSpeed));
+                MovePlayer(turnSpeed, turnIntensity*2);
             } else if (h < 0 && currentLane > LEFT_LIMIT){
-                MovePlayer(h > 0 ? (turnSpeed) : (-1 * turnSpeed));
+                MovePlayer((-1 * turnSpeed), turnIntensity*2);
+            }
+        } else {
+            // while rotation is not 0, keep rotating
+            float z_rotation = player.transform.rotation.eulerAngles.z;
+            Debug.Log(z_rotation + " " + turnIntensity);
+            if((z_rotation > 2  || z_rotation < -2)){
+                MovePlayer(0, (z_rotation > 2 && turnIntensity > 0) ? -1 : 1);
             }
         }
-
-    //TODO: TOUCH INPUT
-    //     if (Input.touchCount > 0) {
-    //         Touch touch = Input.GetTouch(0);
-    //         if (touch.phase == TouchPhase.Began) {
-    //             if (touch.position.x < Screen.width / 2) {
-    //                 nextLane = transform.position.x - 7;
-    //             } else {
-    //                 nextLane = transform.position.x + 7;
-    //             }
-    //         }
-    //     }
     }
 
-    void MovePlayer(float direction) {
+
+    void MovePlayer(float direction, float intensity) {
+
         // Move the player horizontally based on the direction (left or right)
+        float roll = Mathf.Lerp(0, 30, Mathf.Abs(intensity)) * -Mathf.Sign(intensity);
+        player.transform.Rotate(Vector3.forward, roll * Time.deltaTime);
+
+        // transform.localRotation = Quaternion.Euler(Vector3.forward * roll);
+
         transform.Translate(Vector3.right * direction * moveSpeed * Time.deltaTime);
+        camera.transform.Translate(Vector3.right * direction * moveSpeed * Time.deltaTime);
     }
 
     IEnumerator StartTimer(float gameTimeInSeconds)

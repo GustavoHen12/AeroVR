@@ -652,6 +652,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4652772c4fb1508f597b9f9bb16440dd, type: 3}
+--- !u!1 &1007675944 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 4652772c4fb1508f597b9f9bb16440dd,
+    type: 3}
+  m_PrefabInstance: {fileID: 1007675943}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1112586167 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1279437348525638701, guid: e2e682b966e3f644392ffbfab511e0e2,
@@ -1118,9 +1124,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   turnSpeed: 2
+  player: {fileID: 1007675944}
+  camera: {fileID: 2124735742}
   moveSpeed: 5
-  boxWidthPercentage: 0.5
-  boxHeightPercentage: 0.5
 --- !u!114 &1335150010
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1134,13 +1140,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   newSignRatio: 0.5
-  meanPosition_x: 7
-  meanPosition_y: 25
-  standardDeviation: 5
-  stopSign: {fileID: 8031240849543276018, guid: 20b91d20830169c79bbe2f5ed5608874,
-    type: 3}
-  turnRightSign: {fileID: 6364821154631905390, guid: 7f2ff465d202442148348c8f1ac876f9,
-    type: 3}
+  signs:
+  - {fileID: 4139887001416241042, guid: 015a3532e2c5fe289b05e6ec8371e11a, type: 3}
+  - {fileID: 2896026359833033945, guid: 55456fc89ac15a85abdb4e5ee916e208, type: 3}
+  - {fileID: 1534845133615568481, guid: 2063ac937124373d4b99fbe9cf2b6e98, type: 3}
+  - {fileID: 604430827803289013, guid: 74a2b94958604a5638ae4948066b8aab, type: 3}
+  - {fileID: 7434167923563781732, guid: 1db351ba1b06154d3a0fd07186cc2fe2, type: 3}
 --- !u!4 &1521933582 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1279437348525638701, guid: e2e682b966e3f644392ffbfab511e0e2,

@@ -32,9 +32,13 @@ public class TriggerScript : MonoBehaviour
     private int RIGHT = 1;
     private int LEFT = -1;
 
+    private GameStatus gameStatus;
+
 
     // Start is called before the first frame update
     void Start() {
+        gameStatus = GameStatus.GetInstance();
+
         nextSection_z = 50f;
         InstantiateRoadSection(50f);
 
@@ -63,8 +67,10 @@ public class TriggerScript : MonoBehaviour
 
     private GameObject SpawnHit()
     {
+        float currentLane = transform.position.x;
+
         GameObject spawnedHit = Instantiate(hitEffects[0]);
-        spawnedHit.transform.position = new Vector3(0, 2, -26);
+        spawnedHit.transform.position = new Vector3(currentLane, 2, -26);
         spawnedHit.transform.localScale = new Vector3(4, 4, 4);
         spawnedHit.transform.LookAt(Camera.main.transform);
         return spawnedHit;

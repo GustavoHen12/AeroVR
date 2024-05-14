@@ -5,12 +5,8 @@ using UnityEngine;
 public class SignsTrigger : MonoBehaviour
 {
     public float newSignRatio = 0.5f;
-    public float meanPosition_x = 7;
-    public float meanPosition_y = 25;
+    public GameObject[] signs;
 
-    public float standardDeviation = 1;
-    public GameObject stopSign;
-    public GameObject turnRightSign;
 
     private float regionWidth = 40, regionHeigh = 40;
     private float up = 20, left = -35, down = 0, right = 35;
@@ -42,7 +38,7 @@ public class SignsTrigger : MonoBehaviour
         if (randomValue < newSignRatio) {
             Vector3 position = GetPostionNewSign();
 
-            GameObject sign = Random.value > 0.5 ? stopSign : turnRightSign;
+            GameObject sign = signs[Random.Range(0, signs.Length)];
             GameObject newSign = Instantiate(sign, position, Quaternion.identity);
             // Rotate the sign
             newSign.transform.Rotate(90, 0, 180);
