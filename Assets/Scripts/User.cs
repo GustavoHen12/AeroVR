@@ -7,5 +7,6 @@ public class User
 {
     public string userName;
     public int userId;
-    public Configuration configuration;    
+    public int gamesPlayed;
+    public Configuration configuration;
 }

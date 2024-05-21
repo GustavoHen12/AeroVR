@@ -62,6 +62,7 @@ public class TriggerScript : MonoBehaviour
         } else {
             Debug.Log("Triggered obstacle");
             SpawnHit();
+            gameStatus.colisions_timestamp.Add(getGameTime());
         }
     }
 
@@ -214,4 +215,8 @@ public class TriggerScript : MonoBehaviour
         return new Vector3(0, 0, 0);
     }
 
+    private float getGameTime()
+    {
+        return Time.time - gameStatus.gameStartTime;
+    }
 }

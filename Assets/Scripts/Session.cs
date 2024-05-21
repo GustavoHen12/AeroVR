@@ -9,13 +9,13 @@ public class Session {
         if (instance == null) {
             JSONDataManager jsonDataManager = new JSONDataManager();
             jsonDataManager.Awake();
-            instance = jsonDataManager.LoadData<Session>("session");;
+            instance = jsonDataManager.LoadData<Session>("session");
         }
         return instance;
     }
 
     public int currentUserId;
-    public User currentUser;
+    public User currentUser; // TODO: Retirar
     public List<int> activeUsersId;
     public int usersCounter;
 }

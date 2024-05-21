@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using TMPro;
+using UnityEngine.SceneManagement;
 
 using System.Collections;
 using Google.XR.Cardboard;
@@ -20,14 +22,16 @@ public class Moviment : MonoBehaviour
 
     // Timer
     private float currentTime = 0f;
+    public GameObject timerText;
 
     // Start is called before the first frame update
     void Start()
     {
         Session currentSession = Session.GetInstance();
 
-        float gameTimeInSeconds = currentSession.currentUser.configuration.matchDuration * 60f;
-        Debug.Log(currentSession.currentUser.configuration.matchDuration);
+        Debug.Log("Match duration: " + currentSession.currentUser.configuration.matchDuration);
+        float gameTimeInSeconds = ((float)currentSession.currentUser.configuration.matchDuration) * 60f;
+        Debug.Log("gameTimeInSeconds: " + gameTimeInSeconds);
         StartCoroutine(StartTimer(gameTimeInSeconds));
 
         if(currentSession.currentUser.configuration.vrMode){
@@ -65,7 +69,6 @@ public class Moviment : MonoBehaviour
         if(h!=0){
             turnIntensity = h;
 
-            Debug.Log(h);
             if(h > 0 && currentLane < RIGHT_LIMIT){
                 MovePlayer(turnSpeed, turnIntensity*2);
             } else if (h < 0 && currentLane > LEFT_LIMIT){
@@ -74,7 +77,6 @@ public class Moviment : MonoBehaviour
         } else {
             // while rotation is not 0, keep rotating
             float z_rotation = player.transform.rotation.eulerAngles.z;
-            Debug.Log(z_rotation + " " + turnIntensity);
             if((z_rotation > 2  || z_rotation < -2)){
                 MovePlayer(0, (z_rotation > 2 && turnIntensity > 0) ? -1 : 1);
             }
@@ -118,11 +120,38 @@ public class Moviment : MonoBehaviour
         int minutes = Mathf.FloorToInt(currentTime / 60);
         int seconds = Mathf.FloorToInt(currentTime % 60);
 
-        // timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+        timerText.GetComponent<TMP_Text>().text = string.Format("{0:00}:{1:00}", minutes, seconds);
     }
 
     void EndGame() {
         Debug.Log("Game Over!");
-        // Add any game over logic here
+        JSONDataManager jsonDataManager = new JSONDataManager();
+        jsonDataManager.Awake();
+        Session currentSession = Session.GetInstance();
+        User currentUser = currentSession.currentUser;
+
+        // Save the game status
+        GameStatus gameStatus = GameStatus.GetInstance();
+        gameStatus.game_settings = currentUser.configuration;
+
+        Debug.Log("?: " + currentUser.gamesPlayed);
+        Debug.Log("??: " + (currentUser.gamesPlayed + 1));
+        currentUser.gamesPlayed = currentUser.gamesPlayed + 1;
+        Debug.Log("???: " + (currentUser.gamesPlayed));
+        Debug.Log("Saving game status to file: " + currentUser.userId + "_" + currentUser.gamesPlayed);
+        
+        // Save the game status
+        string fileName = "game_status_" + currentUser.userId + "_" + currentUser.gamesPlayed;
+        Debug.Log("Saving game status to file: " + fileName);
+        Debug.Log(gameStatus.getString());
+        jsonDataManager.SaveData<GameStatus>(gameStatus, fileName);
+
+        // Save the user
+        jsonDataManager.SaveData<Session>(currentSession, "session");
+        jsonDataManager.SaveData<User>(currentUser, "user_" + currentUser.userId);
+
+        // Navigate to the main menu
+        SceneController.PreviousScene = SceneManager.GetActiveScene().name;
+        UnityEngine.SceneManagement.SceneManager.LoadScene("GameHistory");
     }
 }

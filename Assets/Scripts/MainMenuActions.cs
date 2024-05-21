@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 using System.Collections;
 using Google.XR.Cardboard;
@@ -33,6 +34,7 @@ public class MainMenuActions : MonoBehaviour
         if(currentSession == null) {
             currentSession = new Session();
             currentSession.activeUsersId = new List<int>();
+            currentSession.usersCounter = 0;
             jsonDataManager.SaveData<Session>(currentSession, "session");
         }
 
@@ -71,6 +73,12 @@ public class MainMenuActions : MonoBehaviour
         UnityEngine.SceneManagement.SceneManager.LoadScene("UserSettings");
     }
 
+    public void NavigateHistory(){
+        // Go to history scene
+        SceneController.PreviousScene = SceneManager.GetActiveScene().name;
+        UnityEngine.SceneManagement.SceneManager.LoadScene("GameHistory");
+    }
+
     public void Play(){
         // Go to game scene
         UnityEngine.SceneManagement.SceneManager.LoadScene("VRMode");
@@ -82,11 +90,13 @@ public class MainMenuActions : MonoBehaviour
         if(newUserName.Length > 0) {
             User newUser = new User();
             newUser.userName = newUserName;
-            newUser.userId = Random.Range(1000, 9999);
+            newUser.gamesPlayed = 0;
+            newUser.userId = currentSession.usersCounter + 1;
             newUser.configuration = new Configuration();
             jsonDataManager.SaveData<User>(newUser, "user_" + newUser.userId);
 
             currentSession.activeUsersId.Add(newUser.userId);
+            currentSession.usersCounter++;
             jsonDataManager.SaveData<Session>(currentSession, "session");
             Debug.Log(newUserName);
 

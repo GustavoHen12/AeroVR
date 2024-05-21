@@ -52,6 +52,9 @@ public class UserSettingsActions : MonoBehaviour
         // Update the match duration value
         Debug.Log("Match duration changed to: " + slider.value);
         currentSession.currentUser.configuration.matchDuration = ConvertStringToInt(slider.value + "");
+
+        TMP_Text matchDurationText = settingMenu.GetComponentsInChildren<TMP_Text>()[1];
+        matchDurationText.text = "Duração da partida: " + currentSession.currentUser.configuration.matchDuration + " min";
     }
 
     public void SpeedValueChanged(TMP_Dropdown dropdown) {

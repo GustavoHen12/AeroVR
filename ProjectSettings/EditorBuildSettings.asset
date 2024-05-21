@@ -20,6 +20,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/VRMode.unity
     guid: 77ab1065633b4e15295b23d0fe459d5b
+  - enabled: 1
+    path: Assets/Scenes/GameHistory.unity
+    guid: 094d449edda84bdb98d15725b18bf50e
   m_configObjects:
     com.unity.adaptiveperformance.google.android.provider_settings: {fileID: 11400000,
       guid: 311bc91cd0af987a39b753d8ef9d1e48, type: 2}

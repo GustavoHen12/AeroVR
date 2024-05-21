@@ -6,14 +6,15 @@ public class SignsTrigger : MonoBehaviour
 {
     public float newSignRatio = 0.5f;
     public GameObject[] signs;
-
-
+    
+    private GameStatus gameStatus;
     private float regionWidth = 40, regionHeigh = 40;
     private float up = 20, left = -35, down = 0, right = 35;
 
     // Start is called before the first frame update
     void Start()
     {
+        gameStatus = GameStatus.GetInstance();
         Session currentSession = Session.GetInstance();
         LoadProbabilitiArray(currentSession.currentUser.configuration.signDistribution);
         
@@ -38,10 +39,19 @@ public class SignsTrigger : MonoBehaviour
         if (randomValue < newSignRatio) {
             Vector3 position = GetPostionNewSign();
 
-            GameObject sign = signs[Random.Range(0, signs.Length)];
+            int signId = Random.Range(0, signs.Length);
+            GameObject sign = signs[signId];
             GameObject newSign = Instantiate(sign, position, Quaternion.identity);
             // Rotate the sign
             newSign.transform.Rotate(90, 0, 180);
+
+            SignExibitionData signData = new SignExibitionData();
+            signData.sign = signId+1;
+            signData.timestamp = Time.time - gameStatus.gameStartTime;
+            signData.x = position.x;
+            signData.y = position.y;
+            signData.z = position.z;
+            gameStatus.signs.Add(signData);
         }
     }
 
