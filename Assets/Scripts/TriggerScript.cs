@@ -34,10 +34,12 @@ public class TriggerScript : MonoBehaviour
 
     private GameStatus gameStatus;
 
+    AudioManager audioManager;
 
     // Start is called before the first frame update
     void Start() {
         gameStatus = GameStatus.GetInstance();
+        audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
 
         nextSection_z = 50f;
         InstantiateRoadSection(50f);
@@ -62,6 +64,7 @@ public class TriggerScript : MonoBehaviour
         } else {
             Debug.Log("Triggered obstacle");
             SpawnHit();
+            audioManager.PlayCrash();
             gameStatus.colisions_timestamp.Add(getGameTime());
         }
     }

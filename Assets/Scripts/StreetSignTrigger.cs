@@ -5,6 +5,7 @@ using UnityEngine;
 public class SignsTrigger : MonoBehaviour
 {
     public float newSignRatio = 0.5f;
+    private float signSize = 0;
     public GameObject[] signs;
     
     private GameStatus gameStatus;
@@ -24,6 +25,16 @@ public class SignsTrigger : MonoBehaviour
         regionWidth = width / 3;
         
         newSignRatio = currentSession.currentUser.configuration.probabilityExibitionSign;
+
+        string configSize = currentSession.currentUser.configuration.signSize;
+        if(configSize == "Grande") {
+            signSize = 1.5f;
+        } else if(configSize == "Muito grande") {
+            signSize = 2f;
+        } else {
+            signSize = 1;
+        }
+
         InvokeRepeating("GenerateSigns", 0f, currentSession.currentUser.configuration.timeExibitionSign);
     }
 
@@ -44,6 +55,7 @@ public class SignsTrigger : MonoBehaviour
             GameObject newSign = Instantiate(sign, position, Quaternion.identity);
             // Rotate the sign
             newSign.transform.Rotate(90, 0, 180);
+            newSign.transform.localScale = new Vector3(signSize, signSize, signSize);
 
             SignExibitionData signData = new SignExibitionData();
             signData.sign = signId+1;

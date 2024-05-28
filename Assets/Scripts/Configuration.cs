@@ -9,6 +9,7 @@ public class Configuration
     public int matchDuration;
     public float speed;
     public int timeExibitionSign;
+    public string signSize;
     public float probabilityExibitionSign;
     public int [] signDistribution;
 
@@ -20,6 +21,7 @@ public class Configuration
         this.timeExibitionSign = 5;
         this.probabilityExibitionSign = 0.5f;
         this.signDistribution = new int[9];
+        this.signSize = "Normal";
     }
 
     public string getString() {

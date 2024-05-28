@@ -77,8 +77,8 @@ public class Moviment : MonoBehaviour
         } else {
             // while rotation is not 0, keep rotating
             float z_rotation = player.transform.rotation.eulerAngles.z;
-            if((z_rotation > 2  || z_rotation < -2)){
-                MovePlayer(0, (z_rotation > 2 && turnIntensity > 0) ? -1 : 1);
+            if((z_rotation > 5  || z_rotation < -5)){
+                MovePlayer(0, (z_rotation > 5 && turnIntensity > 0) ? -1 : 1);
             }
         }
     }
@@ -134,10 +134,7 @@ public class Moviment : MonoBehaviour
         GameStatus gameStatus = GameStatus.GetInstance();
         gameStatus.game_settings = currentUser.configuration;
 
-        Debug.Log("?: " + currentUser.gamesPlayed);
-        Debug.Log("??: " + (currentUser.gamesPlayed + 1));
         currentUser.gamesPlayed = currentUser.gamesPlayed + 1;
-        Debug.Log("???: " + (currentUser.gamesPlayed));
         Debug.Log("Saving game status to file: " + currentUser.userId + "_" + currentUser.gamesPlayed);
         
         // Save the game status

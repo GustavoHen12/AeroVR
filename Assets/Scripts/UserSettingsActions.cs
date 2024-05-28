@@ -17,7 +17,7 @@ public class UserSettingsActions : MonoBehaviour
         jsonDataManager = new JSONDataManager();
         jsonDataManager.Awake();
 
-        currentSession = jsonDataManager.LoadData<Session>("session");
+        currentSession = Session.GetInstance();
         if(currentSession == null) {
             currentSession = new Session();
             currentSession.activeUsersId = new List<int>();
@@ -43,12 +43,19 @@ public class UserSettingsActions : MonoBehaviour
 
     // Update values
     public void ToggleValueChanged(Toggle toogle) {
-        // Check if the toggle is on or off
+        if (toogle == null) {
+            return;
+        }
+
         Debug.Log("Toggle changed to: " + toogle.isOn);
-        currentSession.currentUser.configuration.vrMode = toogle.isOn;
+        currentSession.currentUser.configuration.vrMode = !!toogle.isOn;
     }
 
     public void MatchDurationValueChanged(Slider slider) {
+        if (slider == null) {
+            return;
+        }
+
         // Update the match duration value
         Debug.Log("Match duration changed to: " + slider.value);
         currentSession.currentUser.configuration.matchDuration = ConvertStringToInt(slider.value + "");
@@ -79,6 +86,10 @@ public class UserSettingsActions : MonoBehaviour
         // Update the probability exibition sign value
         Debug.Log("Probability exibition sign changed to: " + ConvertStringToInt(dropdown.options[dropdown.value].text)/100f);
         currentSession.currentUser.configuration.probabilityExibitionSign = ConvertStringToInt(dropdown.options[dropdown.value].text)/100f;
+    }
+
+    public void SignSizeValueChanged(TMP_Dropdown dropdown) {
+        currentSession.currentUser.configuration.signSize = dropdown.options[dropdown.value].text;
     }
 
     public void SignValueChanged(TMP_Dropdown dropdown) {
@@ -115,6 +126,11 @@ public class UserSettingsActions : MonoBehaviour
 
         TMP_Dropdown probabilityExibitionSignDropdown = settingMenu.GetComponentsInChildren<TMP_Dropdown>()[2];
         probabilityExibitionSignDropdown.value = probabilityExibitionSignDropdown.options.FindIndex(option => ConvertStringToInt(option.text) == (currentSession.currentUser.configuration.probabilityExibitionSign*100));
+
+        TMP_Dropdown signSizeDropdown = settingMenu.GetComponentsInChildren<TMP_Dropdown>()[3];
+        Debug.Log(currentSession.currentUser.configuration.signSize);
+        Debug.Log(currentSession.currentUser.configuration.signSize);
+        signSizeDropdown.value = signSizeDropdown.options.FindIndex(option => option.text == currentSession.currentUser.configuration.signSize);
 
         LoadSignDistribution();
     }
