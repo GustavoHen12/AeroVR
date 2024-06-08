@@ -1610,7 +1610,6 @@ MonoBehaviour:
   player: {fileID: 1007675944}
   camera: {fileID: 2124735742}
   moveSpeed: 5
-  timerText: {fileID: 1096430690}
 --- !u!114 &1335150010
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2106,6 +2105,88 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -2.9975796, y: 2, z: -231.7024}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1661844020
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1661844023}
+  - component: {fileID: 1661844022}
+  - component: {fileID: 1661844021}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1661844021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1661844020}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fefbca4ef4cf860ce8626bf3cbd3b924, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  roadSection: {fileID: 24460176596905179, guid: f224d120de5de5901bab0cab227ebf89,
+    type: 3}
+  montain_1: {fileID: 1279437348525479949, guid: e2e682b966e3f644392ffbfab511e0e2,
+    type: 3}
+  montain_2: {fileID: 1686021177304871604, guid: ebee340de387f334f9ac44e044abd8fb,
+    type: 3}
+  ground_1: {fileID: 1686021177304871604, guid: ebee340de387f334f9ac44e044abd8fb,
+    type: 3}
+  ground_2: {fileID: 8957304962413023527, guid: 3f9b178ccd3b86f4ebbfc1f5a2815e56,
+    type: 3}
+  tree_1: {fileID: 2222111361404534124, guid: 88f2fd29f58b9734683512546acec310, type: 3}
+  tree_2: {fileID: 4661435515762455780, guid: e289bf5debb17f6459818c207d781953, type: 3}
+  tree_3: {fileID: 9069115365609291303, guid: 60f79905accf3b24fa0114b941f1aac0, type: 3}
+  rock: {fileID: 7405846476849542632, guid: c6308cb7062fac34e8e50600086b12a1, type: 3}
+  fence_1: {fileID: 3652878720354373010, guid: 0d788839e059b6a4890d4fa62121fa17, type: 3}
+  fence_2: {fileID: 4586402707194328011, guid: 568b1e8dc64d4864b8c0053bdfb77255, type: 3}
+  bush_1: {fileID: 4263922822445002727, guid: 9767d31296b601bad8c537b154f474df, type: 3}
+  bush_2: {fileID: 6239969156481229051, guid: 806f6bbb09585fde68df0be915d14723, type: 3}
+  flower_1: {fileID: 5186735023776687486, guid: 67639e59a4d9f51df892babc29606d87,
+    type: 3}
+  grass_1: {fileID: 38335279662140195, guid: c8d587b730200751a93dd8d3838db6f7, type: 3}
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 128
+--- !u!114 &1661844022
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1661844020}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b498c418684ece070900f8c2f2281490, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timerText: {fileID: 1096430690}
+--- !u!4 &1661844023
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1661844020}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 12.39267, y: 20.712597, z: -3.068723}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2792,3 +2873,4 @@ SceneRoots:
   - {fileID: 496303008}
   - {fileID: 968273110}
   - {fileID: 741861311}
+  - {fileID: 1661844023}
