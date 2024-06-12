@@ -74,6 +74,7 @@ public class GameController : MonoBehaviour {
         // Save the game status
         GameStatus gameStatus = GameStatus.GetInstance();
         gameStatus.game_settings = currentUser.configuration;
+        gameStatus.userId = currentUser.userId;
 
         currentUser.gamesPlayed = currentUser.gamesPlayed + 1;
         Debug.Log("Saving game status to file: " + currentUser.userId + "_" + currentUser.gamesPlayed);

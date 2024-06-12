@@ -20,6 +20,8 @@ public class UserSettingsActions : MonoBehaviour
 
         currentSession = Session.GetInstance();
         currentUser = User.LoadCurrentUser();
+        Debug.Log(currentUser.userId);
+        Debug.Log(currentUser.userName);
         LoadGeneralConfigurations();
         LoadSignConfigurations();
         LoadSignDistribution();
@@ -54,7 +56,11 @@ public class UserSettingsActions : MonoBehaviour
         }
 
         Debug.Log("Toggle changed to: " + toogle.isOn);
-        currentUser.configuration.vrMode = !!toogle.isOn;
+        try{
+            currentUser.configuration.vrMode = !!toogle.isOn;
+        } catch (System.Exception e){
+            Debug.Log(e);
+        }
     }
 
     public void MatchDurationValueChanged(Slider slider) {
@@ -64,10 +70,13 @@ public class UserSettingsActions : MonoBehaviour
 
         // Update the match duration value
         Debug.Log("Match duration changed to: " + slider.value);
-        currentUser.configuration.matchDuration = ConvertStringToInt(slider.value + "");
-
-        TMP_Text matchDurationText = settingMenu.GetComponentsInChildren<TMP_Text>()[1];
-        matchDurationText.text = "Duração da partida: " + currentUser.configuration.matchDuration + " min";
+        try{
+            currentUser.configuration.matchDuration = ConvertStringToInt(slider.value + "");
+            TMP_Text matchDurationText = settingMenu.GetComponentsInChildren<TMP_Text>()[1];
+            matchDurationText.text = "Duração da partida: " + currentUser.configuration.matchDuration + " min";
+        } catch (System.Exception e){
+            Debug.Log(e);
+        }
     }
 
     public void TimeExibitionSignValueChanged(TMP_InputField input) {

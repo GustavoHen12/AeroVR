@@ -23,6 +23,13 @@ public class Moviment : MonoBehaviour
         float currentLane = transform.position.x;
         float h = Input.GetAxis("Mouse X");
 
+        // Get input from keyboard
+        if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A)) {
+            h = -1;
+        } else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D)) {
+            h = 1;
+        }
+
         if(h!=0){
             turnIntensity = h;
 
@@ -34,8 +41,10 @@ public class Moviment : MonoBehaviour
         } else {
             // while rotation is not 0, keep rotating
             float z_rotation = player.transform.rotation.eulerAngles.z;
-            if((z_rotation > 5  || z_rotation < -5)){
-                MovePlayer(0, (z_rotation > 5 && turnIntensity > 0) ? -1 : 1);
+            if((z_rotation > 10  || z_rotation < -10)){
+                MovePlayer(0, (z_rotation > 10 && turnIntensity > 0) ? -1 : 1);
+            } else {
+                player.transform.rotation = Quaternion.Euler(0, 0, 0);
             }
         }
     }

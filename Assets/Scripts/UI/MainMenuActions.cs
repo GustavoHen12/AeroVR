@@ -27,19 +27,23 @@ public class MainMenuActions : MonoBehaviour
 
         jsonDataManager = new JSONDataManager();
 
-        currentSession = jsonDataManager.LoadData<Session>("session");
-        if(currentSession == null) {
-            currentSession = new Session();
-            currentSession.activeUsersId = new List<int>();
-            currentSession.usersCounter = 0;
-            currentSession.Save();
-        }
+        ValidateSession();
+        currentSession = Session.GetInstance();
 
         LoadDropdownOptions();
         LoadMainMenu();
         StopXR();
     }
 
+    private void ValidateSession(){
+        Session session = jsonDataManager.LoadData<Session>("session");
+        if(session == null) {
+            session = new Session();
+            session.activeUsersId = new List<int>();
+            session.usersCounter = 0;
+            session.Save();
+        }
+    }
     private void StopXR()
     {
         Debug.Log("Stopping XR...");
@@ -68,6 +72,11 @@ public class MainMenuActions : MonoBehaviour
     public void NavigateSettings(){
         // Go to settings scene
         UnityEngine.SceneManagement.SceneManager.LoadScene("UserSettings");
+    }
+
+    public void NavigateInfo(){
+        // Go to settings scene
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Info");
     }
 
     public void NavigateHistory(){
@@ -110,6 +119,12 @@ public class MainMenuActions : MonoBehaviour
             options.Add(user.userName);
         }
         dropdown.AddOptions(options);
+        // Set current user as selected
+        if(currentSession.currentUserId != 0) {
+            User currentUser = User.LoadUser(currentSession.currentUserId);
+            Debug.Log(currentUser.userName);
+            dropdown.value = options.IndexOf(currentUser.userName);
+        }
     }
 
     public void SelectUser() {

@@ -32,8 +32,11 @@ public class Configuration
         string configuracao = "Modo VR: " + (vrMode ? "Ativado" : "Desativado") + "\n" +
             "Duração da partida: " + matchDuration + "m\n" +
             "Velocidade: " + (speed == 1 ? "Normal" : speed + "x") + "\n" +
-            "Tempo de exibição da placa: " + timeExibitionSign + "s\n" +
+            "Tempo de exibição da placa: " + timeExibitionSign + "ms\n" +
             "Frequência: " + (probabilityExibitionSign * 100) + "%\n";
+        configuracao += "Tamanho da placa: " + signSize + "\n";
+        configuracao += "Densidade da floresta: " + forestDensity + "\n";
+        configuracao += "Tempo entre placas: " + timeBetweenSigns + "s\n";
         
         return configuracao;
     }

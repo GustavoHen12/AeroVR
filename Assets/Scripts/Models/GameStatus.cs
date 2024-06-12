@@ -34,6 +34,7 @@ public class GameStatus {
     public string dateTimeStart;
     public int score;
     public Configuration game_settings;
+    public int userId;
     private static GameStatus instance;
     
     public static GameStatus GetInstance () {
