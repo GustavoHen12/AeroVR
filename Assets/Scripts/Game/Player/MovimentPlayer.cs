@@ -17,6 +17,14 @@ public class Moviment : MonoBehaviour
     public float moveSpeed = 1f;
     private static float turnIntensity = 0.0f;
 
+    private enum Direction {
+        LEFT = -1,
+        RIGHT = 1,
+        NONE = 0
+    }
+
+    private Direction lastTurn = Direction.NONE;
+
     void Start() { }
 
     void Update() {
@@ -31,7 +39,8 @@ public class Moviment : MonoBehaviour
         }
 
         if(h!=0){
-            turnIntensity = h;
+            turnIntensity = h > 0 ? 1 : -1;
+            lastTurn = h > 0 ? Direction.RIGHT : Direction.LEFT;
 
             if(h > 0 && currentLane < SceneUtil.RIGHT_LIMIT){
                 MovePlayer(turnSpeed, turnIntensity*2);
@@ -41,8 +50,11 @@ public class Moviment : MonoBehaviour
         } else {
             // while rotation is not 0, keep rotating
             float z_rotation = player.transform.rotation.eulerAngles.z;
-            if((z_rotation > 10  || z_rotation < -10)){
-                MovePlayer(0, (z_rotation > 10 && turnIntensity > 0) ? -1 : 1);
+            if((z_rotation > 15  || z_rotation < -15)){
+                if(z_rotation < 0){
+                    z_rotation += 360;
+                }
+                MovePlayer(0, (z_rotation > 180) ? -1 : 1);
             } else {
                 player.transform.rotation = Quaternion.Euler(0, 0, 0);
             }
