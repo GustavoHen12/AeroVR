@@ -11,9 +11,10 @@ GameObject:
   - component: {fileID: 4696960236926403154}
   - component: {fileID: -2305333861773323213}
   - component: {fileID: 3770025309847575423}
+  - component: {fileID: -5366499651347043754}
   m_Layer: 0
   m_Name: Road
-  m_TagString: RoadTrigger
+  m_TagString: Road
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -76,6 +77,20 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &-5366499651347043754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 24460176596905179}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cba4b50e7b6cca821b83f59e5dca0fe0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 0
+  name: 
 --- !u!1 &1869191923572508343
 GameObject:
   m_ObjectHideFlags: 0

@@ -8,6 +8,8 @@ TagManager:
   - DestroyRoad
   - Obstacle
   - Tree
+  - Sign
+  - Road
   layers:
   - Default
   - TransparentFX

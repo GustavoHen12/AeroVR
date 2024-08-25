@@ -7,6 +7,9 @@ EditorBuildSettings:
   m_Scenes:
   - enabled: 1
     path: Assets/Scenes/MainMenu.unity
+    guid: c2dc9e84a8e856572841af17369723e4
+  - enabled: 1
+    path: Assets/Scenes/Info.unity
     guid: a9184086ac1a72ad592a454d803cfd17
   - enabled: 1
     path: Assets/Scenes/NormalMode.unity
@@ -14,6 +17,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/UserSettings.unity
     guid: aba6817c8d1e2e3e0892a570a7531759
+  - enabled: 1
+    path: Assets/Scenes/Highlights.unity
+    guid: 4fd272bb9c0976f56a777fbe6168e33a
+  - enabled: 1
+    path: Assets/Scenes/GetReady.unity
+    guid: 50a2187d15f86635f84bbd8d9af96e87
   - enabled: 1
     path: Assets/Samples/Google Cardboard XR Plugin for Unity/1.23.0/Hello Cardboard/Scenes/HelloCardboard.unity
     guid: 145a2a45d7bc746b19cb68410368bf96
