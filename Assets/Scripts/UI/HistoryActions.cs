@@ -110,6 +110,10 @@ public class HistoryActions : MonoBehaviour
         UnityEngine.SceneManagement.SceneManager.LoadScene("VRMode");
     }
 
+    public void GoToHighlights() {
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Highlights");
+    }
+
     public void SaveScore() {
         // Get score from text input
         TMP_InputField scoreInput = GameObject.Find("ScoreInput").GetComponent<TMP_InputField>();

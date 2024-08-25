@@ -63,6 +63,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: velocidade3
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 6f104d0d95584e912bf9f54b8c0eba3c,
+        type: 3}
+      propertyPath: m_TagString
+      value: Sign
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: -8700617353114198275, guid: 6f104d0d95584e912bf9f54b8c0eba3c, type: 3}

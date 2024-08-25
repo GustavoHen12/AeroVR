@@ -87,7 +87,13 @@ public class MainMenuActions : MonoBehaviour
 
     public void Play(){
         // Go to game scene
-        UnityEngine.SceneManagement.SceneManager.LoadScene("VRMode");
+        User currentUser = User.LoadCurrentUser();
+
+        if(currentUser != null && currentUser.configuration.vrMode){
+            UnityEngine.SceneManagement.SceneManager.LoadScene("GetReady");
+        } else {
+            UnityEngine.SceneManagement.SceneManager.LoadScene("VRMode");
+        }
     }
 
     public void SaveNewUser() {

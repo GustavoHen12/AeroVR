@@ -45,8 +45,9 @@ public class SignsTrigger : MonoBehaviour
 
     public void GenerateSigns()
     {
-        float randomValue = Random.value;
-        if (randomValue < newSignRatio) {
+        float newSignProbability = newSignRatio * 100;
+        float randomValue = Random.Range(0, 100);
+        if (randomValue <= newSignProbability) {
             Vector3 position = GetPostionNewSign();
 
             // Get last sign
@@ -74,12 +75,17 @@ public class SignsTrigger : MonoBehaviour
             signData.y = position.y;
             signData.z = position.z;
             gameStatus.signs.Add(signData);
+
+            saveHighlight(newSign, signId);
+            Debug.Log("[TESTE] Exibiu");
+        } else {
+            Debug.Log("[TESTE] Não Exibiu");
         }
     }
 
     private Vector3 GetPostionNewSign(){
         int index = SelectPosition();
-        int row = index / rows; // Grid 3x3
+        int row = index / columns; // Grid 3x3
         int column = index % columns;
 
         // // Get center point of the region
@@ -91,6 +97,11 @@ public class SignsTrigger : MonoBehaviour
         float randomX = Random.Range(x - regionWidth / 2, x + regionWidth / 2);
         float randomY = Random.Range(y - regionHeigh / 2, y + regionHeigh / 2);
 
+        if(randomY < 2) {
+            randomY = 2;
+        }
+
+        // Debug.Log("[TESTE] Grid position: " + index + " (" + row + ";" + column + ") screen position: " + randomX + " " + randomY);
         return new Vector3(randomX, randomY, -5);
     }
     int [] probabilities;
@@ -117,5 +128,37 @@ public class SignsTrigger : MonoBehaviour
     public int SelectPosition() {
         int randomValue = UnityEngine.Random.Range(0, totalPositions);
         return probabilities[randomValue];
+    }
+
+    void saveHighlight(GameObject signAdded, int signIndex) {
+        SceneHighlight highlight = new SceneHighlight();
+        highlight.type = "new_sign";
+
+        // Signs position
+        SceneObject sign = new SceneObject(signAdded, "sign", signIndex);
+        highlight.addSign(sign);
+
+        GameObject[] allObjects = UnityEngine.Object.FindObjectsOfType<GameObject>();
+        foreach (GameObject obj in allObjects) {
+            // Player position
+            if (obj.tag == "Player") {
+                highlight.setPlayer(new SceneObject(obj, "player"));
+            }
+            // Road position
+            if (obj.tag == "Road") {
+                ObjectId ob_id =  obj.GetComponent<ObjectId>();
+                // Print all components
+                foreach (Component comp in obj.GetComponents<Component>()) {
+                    Debug.Log(comp);
+                }
+                if(ob_id == null) Debug.Log("Object id is null");
+                else Debug.Log(ob_id);
+
+                SceneObject road = new SceneObject(obj, "road", ob_id.id);
+                highlight.addRoad(road);
+            }
+        }
+
+        gameStatus.matchData.addHighlight(highlight);
     }
 }

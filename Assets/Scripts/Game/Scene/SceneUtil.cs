@@ -3,6 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class SceneUtil : MonoBehaviour {
+    public enum SceneObjectType {
+        RoadSection,
+        Montain,
+        Ground,
+        Tree,
+        Rock,
+        Fence,
+        Decorative
+    }
+
     // Game Objects
     public GameObject roadSection;
     public GameObject montain_1;
@@ -45,43 +55,57 @@ public class SceneUtil : MonoBehaviour {
     // Update is called once per frame
     void Update() { }
 
-    public void InstantiateRoadSection(float z) {
+    public List<SceneObject> InstantiateRoadSection(float z, int roadId) {
+        List<SceneObject> objectsInRoad = new List<SceneObject>();
         nextSection_z = z;
         GameObject road = Instantiate(roadSection, new Vector3(0, 0, z), Quaternion.identity);
-        InstantiateAmbient(road, RIGHT);
-        InstantiateAmbient(road, LEFT);
+        objectsInRoad.AddRange(InstantiateAmbient(road, RIGHT));
+        objectsInRoad.AddRange(InstantiateAmbient(road, LEFT));
+
+        ObjectId objectId = road.GetComponent<ObjectId>();
+        objectId.id = roadId;
+
+        Debug.Log("Section " + roadId + " instantiated");
+        return objectsInRoad;
     }
 
-    private void InstantiateAmbient(GameObject roadSection, int side) {
-        InstantiatePath(roadSection, side);
-        GameObject[] grounds = InstantiateGround(roadSection, side);
-        InstantiateTrees(roadSection, side);
-        InstantiateDecorativeObjects(roadSection, side);
+    private List<SceneObject> InstantiateAmbient(GameObject roadSection, int side) {
+        List<SceneObject> objectsInRoad = new List<SceneObject>();
+
+        InstantiatePath(roadSection, side, objectsInRoad);
+        GameObject[] grounds = InstantiateGround(roadSection, side, objectsInRoad);
+        InstantiateTrees(roadSection, side, objectsInRoad);
+        InstantiateDecorativeObjects(roadSection, side, objectsInRoad);
         TurnOffMeshCollider(grounds);
 
-        Debug.Log("Section instantiated");
+        return objectsInRoad;
     }
 
-    private void InstantiatePath(GameObject roadSection, int side){
+    private void InstantiatePath(GameObject roadSection, int side, List<SceneObject> objectsInRoad){
         float z_minimum = nextSection_z - 40;
         float z_maximum = nextSection_z + 90;
         
         int numberOfFences = 15;
         for (int i = 0; i < numberOfFences; i++) {
-            GameObject fence = Random.Range(0, 2) == 1 ? fence_1 : fence_2;
+            int fenceType = Random.Range(0, 2);
+            GameObject fence = fenceType == 1 ? fence_1 : fence_2;
             GameObject fenceInstance = Instantiate(fence, new Vector3(side == RIGHT ? 8 : -8, -0.6f, Random.Range(z_minimum, z_maximum)), Quaternion.identity);
             fenceInstance.transform.rotation = Quaternion.Euler(0, 90, 0);
             fenceInstance.transform.parent = roadSection.transform;
+
+            objectsInRoad.Add(new SceneObject(fenceInstance, SceneObjectType.Fence.ToString(), fenceType));
         }
 
         int numberOfRocks = 50;
         for (int i = 0; i < numberOfRocks; i++) {
             GameObject rockInstance = Instantiate(rock, new Vector3(Random.Range(LEFT_LIMIT, RIGHT_LIMIT), (Random.Range(8.0f, 15.0f)/-10.0f), Random.Range(z_minimum, z_maximum)), Quaternion.identity);
             rockInstance.transform.parent = roadSection.transform;
+
+            objectsInRoad.Add(new SceneObject(rockInstance, SceneObjectType.Rock.ToString()));
         }
     }
 
-    private GameObject[] InstantiateGround(GameObject roadSection, int side) {
+    private GameObject[] InstantiateGround(GameObject roadSection, int side, List<SceneObject> objectsInRoad) {
         GameObject[] allGrounds = new GameObject[6];
 
         bool secondOrFirst = Random.Range(0, 2) == 1;
@@ -91,6 +115,7 @@ public class SceneUtil : MonoBehaviour {
         groundInstance.transform.localScale = new Vector3(1.5f, 1f, 2f);
         groundInstance.transform.parent = roadSection.transform;
         allGrounds[0] = groundInstance;
+        objectsInRoad.Add(new SceneObject(groundInstance, SceneObjectType.Ground.ToString(), secondOrFirst ? 1 : 2));
 
         // Montains
         float[] montains_z = new float[] {-10, 20, 40, 60};
@@ -104,6 +129,8 @@ public class SceneUtil : MonoBehaviour {
             montainInstance.transform.localScale = new Vector3(1, 1 + height, 2);
             montainInstance.transform.parent = roadSection.transform;
             allGrounds[i + 1] = montainInstance;
+
+            objectsInRoad.Add(new SceneObject(montainInstance, SceneObjectType.Montain.ToString()));
         }
 
         return allGrounds;
@@ -117,7 +144,7 @@ public class SceneUtil : MonoBehaviour {
         }
     }
 
-    private void InstantiateDecorativeObjects(GameObject roadSection, int side) {
+    private void InstantiateDecorativeObjects(GameObject roadSection, int side, List<SceneObject> objectsInRoad) {
         int numberOfThings = 50;
         for(int i = 0; i < numberOfThings; i++) {
             Vector3 point = getRandomPointGround(40f);
@@ -137,10 +164,12 @@ public class SceneUtil : MonoBehaviour {
             GameObject obj = Instantiate(game_obj, point, Quaternion.identity);
             obj.transform.localScale = new Vector3(1 + scale, 1 + scale, 1 + scale);
             obj.transform.parent = roadSection.transform;
+
+            objectsInRoad.Add(new SceneObject(obj, SceneObjectType.Decorative.ToString(), randomObject));
         }    
     }
 
-    private void InstantiateTrees(GameObject roadSection, int side) {
+    private void InstantiateTrees(GameObject roadSection, int side, List<SceneObject> objectsInRoad) {
         // Trees
         int numberOfTrees = forestDensityLevel*10, maxTreesOnRoad = forestDensityLevel;
         Vector3[] treePositions = new Vector3[numberOfTrees];
@@ -175,7 +204,7 @@ public class SceneUtil : MonoBehaviour {
         }
         
         for (int j = 0; j < numberOfTrees; j++) {
-            SpawnTree(roadSection, treePositions[j]);
+            SpawnTree(roadSection, treePositions[j], objectsInRoad);
         }
     }
 
@@ -183,7 +212,7 @@ public class SceneUtil : MonoBehaviour {
         return position.x >= (LEFT_LIMIT - 2) && position.x <= (RIGHT_LIMIT + 2);
     }
 
-    private void SpawnTree(GameObject roadSection, Vector3 position){        
+    private void SpawnTree(GameObject roadSection, Vector3 position, List<SceneObject> objectsInRoad){        
         // random tree
         GameObject treeObj = tree_1;
         int randomTree = Random.Range(0, 3);
@@ -199,6 +228,8 @@ public class SceneUtil : MonoBehaviour {
         GameObject tree = Instantiate(treeObj, treePosition, Quaternion.identity);
         tree.transform.localScale = new Vector3(1 + height, 1 + height, 1 + height);
         tree.transform.parent = roadSection.transform;
+
+        objectsInRoad.Add(new SceneObject(tree, SceneObjectType.Tree.ToString(), randomTree));
     }
 
     private Vector3 getRandomPointGround(float spawnRadius){
@@ -209,5 +240,58 @@ public class SceneUtil : MonoBehaviour {
         }
 
         return new Vector3(0, 0, 0);
+    }
+
+
+    public GameObject InstantiateRoad(List<SceneObject> objects, float z) {
+        List<SceneObject> objectsInRoad = new List<SceneObject>();
+        GameObject road = Instantiate(roadSection, new Vector3(0, 0, z), Quaternion.identity);
+
+        for(int i = 0; i < objects.Count; i++){
+            SceneObject sceneObject = objects[i];
+            GameObject obj = GetGameObject(sceneObject);
+            GameObject instance = Instantiate(obj, sceneObject.Position, Quaternion.Euler(sceneObject.Rotation));
+            instance.transform.localScale = sceneObject.Scale;
+
+            instance.transform.parent = road.transform;
+        }
+
+        // Remove move component
+        Destroy(road.GetComponent<Move>());
+
+        return road;
+    }
+
+    public GameObject GetGameObject(SceneObject sceneObject) {
+        GameObject obj = null;
+        if(sceneObject.ObjectType == SceneObjectType.RoadSection.ToString()){
+            obj = roadSection;
+        } else if(sceneObject.ObjectType == SceneObjectType.Montain.ToString()){
+            obj = sceneObject.id == 1 ? montain_1 : montain_2;
+        } else if(sceneObject.ObjectType == SceneObjectType.Ground.ToString()){
+            obj = sceneObject.id == 1 ? ground_1 : ground_2;
+        } else if(sceneObject.ObjectType == SceneObjectType.Tree.ToString()){
+            obj = tree_1;
+            if (sceneObject.id == 1) {
+                obj = tree_2;
+            } else if (sceneObject.id == 2) {
+                obj = tree_3;
+            }
+        } else if(sceneObject.ObjectType == SceneObjectType.Rock.ToString()){
+            obj = rock;
+        } else if(sceneObject.ObjectType == SceneObjectType.Decorative.ToString()){
+            obj = bush_1;
+            if (sceneObject.id == 1) {
+                obj = bush_2;
+            } else if (sceneObject.id == 2) {
+                obj = flower_1;
+            } else if (sceneObject.id == 3) {
+                obj = grass_1;
+            }
+        } else if(sceneObject.ObjectType == SceneObjectType.Fence.ToString()){
+            obj = sceneObject.id == 1 ? fence_1 : fence_2;
+        }
+
+        return obj;
     }
 }

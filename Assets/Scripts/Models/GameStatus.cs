@@ -27,6 +27,45 @@ public class ColisionData {
 }
 
 [System.Serializable]
+public class Road {
+    public List<SceneObject> roads;
+    public Road() {
+        this.roads = new List<SceneObject>();
+    }
+
+    public void addRoad(SceneObject road) {
+        this.roads.Add(road);
+    }
+}
+
+[System.Serializable]
+public class MatchData {
+    public List<Road> roads;
+    public List<SceneHighlight> highlights;
+    public MatchData() {
+        this.roads = new List<Road>();
+        this.highlights = new List<SceneHighlight>();
+    }
+
+    public void addRoad(List<SceneObject> road) {
+        Debug.Log("Adding road");
+        Debug.Log(road.Count);
+        Road newRoad = new Road();
+        newRoad.roads = road;
+        this.roads.Add(newRoad);
+    }
+
+    public int getRoadsCount() {
+        return this.roads.Count;
+    }
+
+    public void addHighlight(SceneHighlight highlight) {
+        this.highlights.Add(highlight);
+    }
+}
+
+
+[System.Serializable]
 public class GameStatus {
     public List<ColisionData> colisions;
     public List<SignExibitionData> signs;
@@ -34,6 +73,7 @@ public class GameStatus {
     public string dateTimeStart;
     public int score;
     public Configuration game_settings;
+    public MatchData matchData;
     public int userId;
     private static GameStatus instance;
     
@@ -45,6 +85,7 @@ public class GameStatus {
             instance.gameStartTime = Time.time;
             instance.score = -1;
             instance.dateTimeStart = System.DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
+            instance.matchData = new MatchData();
         }
         return instance;
     }

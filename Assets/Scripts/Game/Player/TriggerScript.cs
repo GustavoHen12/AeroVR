@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 public class TriggerScript : MonoBehaviour
 {
     public GameObject roadSection;
@@ -48,12 +49,48 @@ public class TriggerScript : MonoBehaviour
         sceneUtil.setForestDensityLevel(currentUser.configuration.forestDensity);
 
         nextSection_z = 50f;
-        sceneUtil.InstantiateRoadSection(50f);
+
+        int roadId = gameStatus.matchData.getRoadsCount();
+        List<SceneObject> roadSectionObjects = sceneUtil.InstantiateRoadSection(50f, roadId);
+        gameStatus.matchData.addRoad(roadSectionObjects);
 
         hitEffects = new GameObject[particlesPool.childCount];	
         for(int i = 0; i < particlesPool.childCount; i++) {
             hitEffects[i] = particlesPool.GetChild(i).gameObject;
         }
+    }
+
+    void getAllPositions() {
+        SceneHighlight highlight = new SceneHighlight();
+        highlight.type = "colision";
+
+        GameObject[] allObjects = UnityEngine.Object.FindObjectsOfType<GameObject>();
+        foreach (GameObject obj in allObjects) {
+            // Player position
+            if (obj.tag == "Player") {
+                highlight.setPlayer(new SceneObject(obj, "player"));
+            }
+            // Road position
+            if (obj.tag == "Road") {
+                ObjectId ob_id =  obj.GetComponent<ObjectId>();
+                // Print all components
+                foreach (Component comp in obj.GetComponents<Component>()) {
+                    Debug.Log(comp);
+                }
+                if(ob_id == null) Debug.Log("Object id is null");
+                else Debug.Log(ob_id);
+
+                SceneObject road = new SceneObject(obj, "road", ob_id.id);
+                highlight.addRoad(road);
+            }
+            // Signs position
+            if (obj.tag == "Sign") {
+                SceneObject sign = new SceneObject(obj, "sign");
+                highlight.addSign(sign);
+            }
+        }
+
+        gameStatus.matchData.addHighlight(highlight);
     }
 
     // Update is called once per frame
@@ -63,10 +100,16 @@ public class TriggerScript : MonoBehaviour
     }
 
     public void OnTriggerEnter(Collider other) {
+        // if current scene is highlights
+        if (SceneManager.GetActiveScene().name == "Highlights") return;
+
         if (other.tag == "RoadTrigger") {
             Debug.Log("Triggered");
             nextSection_z = 193f;
-            sceneUtil.InstantiateRoadSection(nextSection_z);
+
+            int roadId = gameStatus.matchData.getRoadsCount();
+            List<SceneObject> roadSectionObjects = sceneUtil.InstantiateRoadSection(nextSection_z, roadId);
+            gameStatus.matchData.addRoad(roadSectionObjects);
         } else {
             Debug.Log("Triggered obstacle");
             SpawnHit();
@@ -74,6 +117,8 @@ public class TriggerScript : MonoBehaviour
 
             ColisionData colisionData = new ColisionData(getGameTime(), transform.position, other.transform.position);
             gameStatus.colisions.Add(colisionData);
+
+            getAllPositions();
         }
     }
 

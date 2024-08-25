@@ -2164,6 +2164,7 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 128
+  forestDensityLevel: 5
 --- !u!114 &1661844022
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2724,7 +2725,7 @@ PrefabInstance:
     - target: {fileID: 7223601921134853960, guid: 20b91d20830169c79bbe2f5ed5608874,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 10.997332
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7223601921134853960, guid: 20b91d20830169c79bbe2f5ed5608874,
         type: 3}

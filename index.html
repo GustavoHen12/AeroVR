@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AeroVR</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <img class="logo_icon" src="./assets/icon.png" alt="AeroVR">
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#home">HOME</a></li>
+                <li><a href="#jogo">JOGO</a></li>
+                <li><a href="#unity">UNITY</a></li>
+                <li><a href="#sobre">SOBRE</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="container" id="home">
+        <img class="banner" src="./assets/aero_vr.png" alt="AeroVR">
+        <h2>Jogo em realidade virtual de treinamento para compensação de perda do campo visual para pacientes pós-avc</h2>    
+        <div class="video-text-container">
+            <video width="500" height="auto" controls>
+                <source src="./assets/modo_3d.mp4" type="video/mp4">
+            </video>
+            <p style="margin-left: 1.5em; font-weight: 300;">Anualmente, o Acidente Vascular Cerebral (AVC) afeta milhares de pessoas, sendo uma das principais causas de
+                óbitos no Brasil. Entre os sobreviventes, muitos enfrentam sequelas permanentes, como a perda parcial do campo
+                de visão, conhecida como hemianopsia. A estratégia de tratamento mais comum para essa condição, consistem em,
+                por meio de diferentes execícios, estimular o paciente a compensar de alguma forma essa perca do campo visual.
+                Entretanto, assim como a maioria dos métodos de terapias tradicionais, esses exercícios podem ser pouco
+                motivadores para os pacientes. Compreendendo os desafios da reabilitação voltada à compensação dessa perda
+                visual, desenvolvemos o AeroVR, um jogo projetado para auxiliar na recuperação dos pacientes. O jogo integra
+                dois conceitos fundamentais: a realidade virtual, que permite estimular uma ampla área do campo visual, e os
+                jogos sérios, que promovem maior engajamento dos pacientes, incentivando o tratamento. Todo o projeto foi
+                desenvolvido de forma iterativa em colaboração com a Clínica-Escola de Terapia Ocupacional da UFPR.</p>
+        </div>
+        <img class="ufpr" src="./assets/logo_ufpr_vri.png" alt="AeroVR">
+    </div>
+
+    <section id="Jogo">
+        <h2>Jogo</h2>
+        <p>O jogo pode ser utilizado em três modos: standalone, ou seja, apenas no smartphone, espelhando a tela do
+            smartphone em uma tela com o auxílio de um computador e em juntamente com um óculos de realidade virtual.</p>
+        <div class="image_container">
+            <img src="./assets/modos_jogo.png" class="text_image"/>
+        </div>
+        <h3 id="instalando-o-aplicativo">Instalando o aplicativo</h3>
+        <p>O AeroVR está disponível apenas para dispositivos Android, sendo que, o processo de instalação é muito similar a
+            um aplicativo tradicional.</p>
+        <p>Acesse o <a href="https://github.com/GustavoHen12/AeroVR">link do repositório</a> e faça o download da versão mais recente do aplicativo. O aplicativo é o
+            arquivo <code>aero_vr.apk</code> disponível para download. É possível realizar o download por meio de um
+            computador e posteriormente transferir para o smartphone desejado, ou realizar diretamente no smartphone.</p>
+        <p>Após realizar o download, realize a instalação do aplicativo no dispositivo móvel desejado. Para isso, através do
+            gerenciador de arquivos do dispositivo, encontre o arquivo <code>.apk</code> e abra o arquivo. Com isso, será
+            iniciado o processo de instalação do aplicativo. Dependendo das configurações do seu dispositivo pode ser
+            necessário permitir a instalação de aplicativos de fontes externas, para isso siga as instruções que serão
+            exibidas no dispositivo e após isso realize a instalação normalmente.</p>
+        <h3 id="configurando">Configurando</h3>
+        <p>Após instalado o aplicativo, a primeira coisa a ser realizada é a configuração de um paciente para poder iniciar
+            a partida. Para isso basta:</p>
+        <ol>
+            <li>No menu inicial clique na opção &quot;Selecionar Paciente&quot;</li>
+            <li>Na caixa de texto superior escreva o nome do paciente inicial e pressione &quot;Adicionar&quot;</li>
+            <li>No menu de seleção abaixo na tela, selecione o nome do paciente adicionado</li>
+            <li>Volte para o menu principal</li>
+            <li>Clique em configurações</li>
+            <li>Realize a configuração dos parâmetros para o paciente. <strong>Nesse momento deve ser configurado a
+                    disposição das placas, pois a configuração padrão não exibe nenhuma placa</strong></li>
+            <li>Salve as configurações</li>
+        </ol>
+        <p>Após esses passos, o jogo estará configurado para ser utilizado no dispositivo móvel desejado e basta iniciar a
+            partida.</p>
+        <h3 id="modos-de-uso">Modos de uso</h3>
+        <p>O jogo possui 3 diferentes modos de uso, aqui falaremos das particularidades de cada uma:</p>
+        <h4 id="standalone">Standalone</h4>
+        <p>Nesse caso o jogo será exibido no próprio smartphone, para controlar o avião pode ser utilizado a própria tela do
+            smartphone, basta deslizar o dedo para esquerda ou direita. Ressalto que esse é o método que menos estímulo que
+            o jogo seja utilizado, uma vez que a área do campo visual preenchido pela tela do smartphone é muito limitada,
+            portanto o uso terá pouco ou nenhum benefício para o paciente.</p>
+        <h4 id="monitor-externo">Monitor externo</h4>
+        <div class="video-text-container">
+            <div>
+                <p>Para o uso com o monitor externo, basta espelhar a tela do dispositivo móvel no monitor. Para isso recomendamos o
+                    uso da aplicação para computador <a href="https://github.com/Genymobile/scrcpy">scrcpy</a>. Esse aplicativo
+                    permite espelhar a tela do smartphone no computado e está disponível para os principais sistemas operacionais
+                    (Linux, macOS e Windows). Para utilizar essa ferramenta, basta acessar o <a
+                        href="https://github.com/Genymobile/scrcpy">link do repositório</a> e seguir as instruções de instalação
+                    disponíveis.</p>    
+                <p>Um dos grandes benefícios dessa ferramenta é que ela permite que o mouse e o teclado do computador interajam com
+                    o smartphone. Portanto, nesse modo temos duas possibilidades de controle: através do mouse do computador ou
+                    utilizando as setas do teclado. </p>
+            </div>
+            <video width="500" height="auto" controls>
+                <source src="./assets/modo_vr.mp4" type="video/mp4">
+            </video>
+        </div>
+        <h4 id="-culos-vr">Óculos VR</h4>
+        <p>Para utilizar o jogo no modo VR é necessário ter em mente dois pontos importantes:</p>
+        <ul>
+            <li>O smartphone precisa possuir os sensores necessários para o uso em realidade virtual. Para conferir isso
+                basta verificar os sensores disponíveis no smartphone ou tente reproduzir um vídeo em realidade virtual,
+                movimente o celular e veja se o vídeo acompanha o movimento.</li>
+            <li>Devemos ter um óculos VR compatível com o celular. De modo geral todo óculos VR no estilo do Google
+                Cardboard, ou seja, em que o óculos possui apenas as lentes e serve como um adaptador para o smartphone deve
+                funcionar corretamente. Para o desenvolvimento desse projeto foi utilizado o modelo <a
+                    href="https://shopee.com.br/%C3%93culos-Vr-Realidade-Virtual-3d-Com-Fone-De-Ouvido-E-Controle-i.493663790.17919996467?sp_atk=35e2afe4-68d9-4add-8ffa-3320427605c6&amp;xptdk=35e2afe4-68d9-4add-8ffa-3320427605c6">VR
+                    Shinecon</a> </li>
+            <li>
+                <p>Um controle bluetooth para ser utilizado durante o jogo. Apesar do controle bluetooth para óculos VR ser
+                    o mais simples, ressaltamos que qualquer mouse bluetooth conectado ao smartphone irá funcionar
+                    corretamente.</p>
+                <p>Com todos esses equipamentos corretamente verificados e disponíveis, basta habilitar o modo VR nas
+                    configurações e iniciar a partida. Após isso, insira o smartphone no óculos VR e jogue normalmente.</p>
+            </li>
+        </ul>
+
+        <div class="image_container">
+            <video width="500" height="auto" controls>
+                <source src="./assets/config.mp4" type="video/mp4">
+            </video>  
+        </div>
+    </section>
+
+    <section id="unity">
+        <h2>Unity</h2>
+        <p>O projeto foi inteiramente desenvolvido utilizando a plataforma Unity. Fique a vontade para modificar o projeto segundo a sua necessidade. Para isso, basta clonar o repositório principal do projeto e instalar os plugins necessários.</p>
+    </section>
+
+    <section id="sobre">
+        <h2>Sobre o projeto</h2>
+            <p>Esse projeto foi desenvolvido durante o meu trabalho de conclusão de curso. O objetivo era atender uma demanda existente da <a href="https://saude.ufpr.br/terapiaocupacional/clinica-escola/">Clínica-Escola de Terapia Ocupacional da UFPR</a> criando uma ferramenta gratuita, que gerasse um maior engajamento e que estivesse consoante os parâmetros das aplicações disponíveis comercialmente.</p>
+            <p>O resultado foi um aplicativo funcional, que tem apresentado em suas fases iniciais resultados muito positivos. Portanto, fique a vontade para testar, sugerir melhorias ou entrar em contato conosco para saber mais.</p>
+            <p>Desenvolvido por: Gustavo Henrique da Silva Barbosa - <a href="https://www.linkedin.com/in/gustavohs-barbosa/">contato</a></p>
+            <p>Orientador: Prof° Eduardo Todt - <a href="https://www.inf.ufpr.br/todt/">contato</a></p>
+            <p>Apoio: Prof° Renato Nickel - <a href="https://saude.ufpr.br/terapiaocupacional/renato-nickel/">contato</a></p>
+    </section>
+
+    <footer>
+        <p>2024 AeroVR</p>
+    </footer>
+</body>
+
+</html>
