@@ -1441,12 +1441,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4652772c4fb1508f597b9f9bb16440dd, type: 3}
---- !u!1 &1007675944 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 4652772c4fb1508f597b9f9bb16440dd,
-    type: 3}
-  m_PrefabInstance: {fileID: 1007675943}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1096430690
 GameObject:
   m_ObjectHideFlags: 0
@@ -1983,7 +1977,6 @@ GameObject:
   - component: {fileID: 1335150005}
   - component: {fileID: 1335150007}
   - component: {fileID: 1335150006}
-  - component: {fileID: 1335150009}
   m_Layer: 10
   m_Name: Player
   m_TagString: Player
@@ -2055,22 +2048,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &1335150009
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1335150004}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac4125385db59938db9fc5ac2856b912, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  turnSpeed: 2
-  player: {fileID: 1007675944}
-  camera: {fileID: 2124735742}
-  moveSpeed: 5
 --- !u!1 &1453907951
 GameObject:
   m_ObjectHideFlags: 0

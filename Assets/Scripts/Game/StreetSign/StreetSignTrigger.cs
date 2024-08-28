@@ -31,11 +31,11 @@ public class SignsTrigger : MonoBehaviour
 
         string configSize = configuration.signSize;
         if(configSize == "Grande") {
-            signSize = 1.5f;
-        } else if(configSize == "Muito grande") {
             signSize = 2f;
+        } else if(configSize == "Muito grande") {
+            signSize = 2.5f;
         } else {
-            signSize = 1;
+            signSize = 1.5f;
         }
 
         InvokeRepeating("GenerateSigns", 0f, configuration.timeBetweenSigns);

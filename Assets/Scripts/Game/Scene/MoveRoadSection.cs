@@ -18,7 +18,12 @@ public class Move : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float speed = baseSpeed * speedFactor;
+        float speedBoost = 0;
+        if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W)) {
+            speedBoost = 0.7f;
+        }
+
+        float speed = baseSpeed * (speedFactor + speedBoost);
         transform.position += new Vector3(0, 0, -1*speed) * Time.deltaTime;   
     }
 

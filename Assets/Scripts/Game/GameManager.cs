@@ -18,14 +18,13 @@ public class GameController : MonoBehaviour {
 
         float gameTimeInSeconds = ((float)currentUser.configuration.matchDuration) * 60f;
         StartCoroutine(StartTimer(gameTimeInSeconds));
-
-        // if(currentUser.configuration.vrMode){
-        //     Cursor.visible = false;
-        //     StartCoroutine(StartXR());            
-        // }        
     }
 
-    void Update() { }
+    void Update() { 
+        if (Input.GetKeyDown(KeyCode.Escape)) {
+            EndGame();
+        }
+    }
 
     private IEnumerator StartXR() {
         Debug.Log("Initializing XR...");
